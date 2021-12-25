@@ -7,15 +7,33 @@ packer {
   }
 }
 
-source "docker" "ubuntu" {
-  image  = "ubuntu:xenial"
+variable "ice_cream" {
+  type    = string
+  default = "vanilla"
+}
+
+variable "docker_image" {
+  type    = string
+  default = "ubuntu:xenial"
+}
+
+source "docker" "example" {
+  image  = var.docker_image
   commit = true
 }
 
 build {
-  name    = "learn-packer"
   sources = [
-    "source.docker.ubuntu"
+    "source.docker.example"
   ]
+  provisioner "shell" {
+    environment_vars = [
+      "FOO=hello world",
+    ]
+    inline = [
+      "echo Adding file to Docker Container",
+      "echo \"FOO is $FOO\" > example.txt",
+      "echo ${var.ice_cream}"
+    ]
+  }
 }
-
