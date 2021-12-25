@@ -12,23 +12,8 @@ source "docker" "example" {
   commit = true
 }
 
-source "docker" "example-bionic" {
-  image  = "ubuntu:bionic"
-  commit = true
-}
-
 build {
   sources = [
-    "source.docker.example-bionic",
-    "source.docker.example",
+    "source.docker.example"
   ]
-  provisioner "shell" {
-    environment_vars = [
-      "FOO=hello world",
-    ]
-    inline = [
-      "echo Adding file to Docker Container",
-      "echo \"FOO is $FOO\" > example.txt"
-    ]
-  }
 }
